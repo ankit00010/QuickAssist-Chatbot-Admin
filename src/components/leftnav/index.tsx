@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Logo from "@/public/images/cms_logo.png";
 import Link from "next/link";
 import "./style.css";
-import { MdDashboard } from "react-icons/md";
 import { NavbarValues } from "./constants";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 
