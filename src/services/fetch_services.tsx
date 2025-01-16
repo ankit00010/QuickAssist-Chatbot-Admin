@@ -3,9 +3,14 @@ import { ResponseType } from "@/types/Response_Types";
 interface FetchServiceProps {
   method: string;
   endpoint: string;
-  data: { [key: string]: any } | FormData;
+  data?: Record<string, unknown> | FormData; 
 }
 
+/**
+ *
+ * @param _props - method, endpoint, data
+ * @returns
+ */
 export const fetchService = async (
   _props: FetchServiceProps
 ): Promise<ResponseType> => {
@@ -26,7 +31,9 @@ export const fetchService = async (
       body: JSON.stringify(_props.data),
     });
   }
+
   const data = await response.json();
+
   const res: ResponseType = {
     code: response.status,
     data: data,
@@ -34,3 +41,4 @@ export const fetchService = async (
 
   return res;
 };
+

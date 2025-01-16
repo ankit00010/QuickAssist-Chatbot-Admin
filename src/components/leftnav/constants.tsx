@@ -1,14 +1,16 @@
-type NavbarTypes = {
-  value: string;
-  href: string;
-  icon: any;
-};
 import { MdDashboard } from "react-icons/md";
 import { IoIosAddCircle } from "react-icons/io";
 import { FaQ, FaDatabase } from "react-icons/fa6";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { FaUsers } from "react-icons/fa";
+import { JSX } from "react";
 
+
+type NavbarTypes = {
+  value: string;
+  href: string;
+  icon: JSX.Element;
+};
 export const NavbarValues: NavbarTypes[] = [
   {
     value: "Dashboard",

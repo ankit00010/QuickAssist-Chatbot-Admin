@@ -1,4 +1,4 @@
 export type ResponseType = {
   code: number;
-  data: any;
+  data: unknown; 
 };
