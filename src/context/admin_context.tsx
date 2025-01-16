@@ -1,3 +1,4 @@
+"use client";  
 import React, { createContext, ReactNode } from "react";
 
 export interface AdminContextType {}
