@@ -1,0 +1,17 @@
+.dropdown-container{
+    display: flex;
+    gap: 46px;
+  }
+  .dropdown-inner-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+
+  .drop-down-select-container{
+    height: 35px;
+    width: 101px;
+    padding:0px 5px 0px 5px ;
+    border-radius: 8%;
+  }

@@ -1,0 +1,95 @@
+.custom-field {
+    width: 100%;
+    height: 46px;
+    position: relative;
+  }
+  
+  .custom-text-field {
+    color: var(--black-color);
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    font-weight: var(--regular-font-weight);
+    line-height: 22px;
+    padding-left: 15px;
+    padding-right: 35px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    height: 46px;
+    width: 100%;
+  }
+  .custom-text-field.with-bg {
+    background: white;
+  }
+  
+  .custom-text-field::-webkit-outer-spin-button,
+  .custom-text-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .custom-text-field::placeholder {
+    color: transparent;
+    transition: color 0.3s;
+  }
+  
+  .custom-text-field:focus::placeholder {
+    color: grey;
+  }
+  
+  .custom-field-label {
+    position: absolute;
+    font-size: 14px;
+    top: 50%;
+    left: 5%;
+    transform: translate(0, -50%);
+    cursor: text;
+    user-select: none;
+    z-index: -1;
+    color: grey;
+    transition: top 0.3s, font-size 0.3s, color 0.3s;
+  }
+  
+  .custom-field-label.visible-for-login {
+    z-index: 0;
+  }
+  
+  .custom-field-label.focus {
+    background-color: #e7f0f0;
+    font-weight: 600;
+    color: black;
+    padding: 2px 4px;
+    border-radius: 4px;
+    top: 0%;
+    font-size: 10px;
+    z-index: 1;
+  }
+  
+  .custom-field-close {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-30%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .custom-field-error-message {
+    color: red;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transform: translateY(-10px);
+    transition: transform 0.1s linear;
+  }
+  
+  .custom-field-error-display {
+    visibility: visible;
+    transform: translateY(0);
+  }

@@ -1,5 +1,24 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
 
+
+:root {
+  --blue-color: #072A2B;
+  --green-color: #258d8f;
+  --background: #f6fafa;
+  --grey-color: #777b83;
+  --black-color: #1f1f1f;
+  --dark-black-color: #000000;
+  --white-color: #ffffff;
+  --border-color: #eae9e9;
+  --dividing-line: #f1f3f5;
+  --table-bg: #f9fafb;
+  --regular-font-weight: 400;
+  --medium-font-weight: 500;
+  --semibold-font-weight: 600;
+  --bold-font-weight: 700;
+}
+
+
 /* Reset Defaults */
 * {
     margin: 0;

@@ -1,0 +1,15 @@
+.btn-component {
+  width: 122px;
+  height: 44px;
+  border-radius: 4px;
+  background: var(--green-color);
+  outline: none;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16);
+  border: none;
+  cursor: pointer;
+  border: 1px solid var(--green-color);
+  /* text style */
+  color: #fff;
+  font-size: 18px;
+  font-weight: var(--semibold-font-weight);
+}

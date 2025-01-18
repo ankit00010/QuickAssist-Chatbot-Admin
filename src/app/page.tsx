@@ -1,9 +1,10 @@
-import styles from "./page.module.css";
+import LoginContainer from "@/container/login-container";
 
-export default function Home() {
+
+export default function Login() {
   return (
-    <div className={styles.page}>
-
-    </div>
+  <main>
+    <LoginContainer/>
+  </main>
   );
 }

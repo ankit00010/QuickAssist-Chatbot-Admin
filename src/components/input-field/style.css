@@ -1,0 +1,16 @@
+.input-field {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  outline: none;
+  /* text style */
+  color: var(--black-color);
+  font-size: 16px;
+  font-weight: var(--regular-font-weight);
+  padding: 0px 16px;
+  background: var(--background);
+}
+.input-field.disabled {
+  cursor: not-allowed;
+}
