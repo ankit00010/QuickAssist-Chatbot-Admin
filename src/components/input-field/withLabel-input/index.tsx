@@ -6,13 +6,13 @@ interface WithLabelInputFieldProps {
   id?: string;
   value?: string | undefined;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-
+  name:string;
   placeholder?: string;
   type?: string;
   error?: string;
   view_only?: boolean;
-  label: string;
-  className?: string; // Changed from `class` to `className`
+  label?: string;
+  className?: string; 
 }
 
 const WithLabelInputField: FC<WithLabelInputFieldProps> = ({
@@ -24,7 +24,8 @@ const WithLabelInputField: FC<WithLabelInputFieldProps> = ({
   type = "text",
   label,
   onChange,
-  className // Changed from `class` to `className`
+  name,
+  className 
 }) => {
   return (
     <div className={`with-label-main-section ${className || ""}`}> 
@@ -35,6 +36,7 @@ const WithLabelInputField: FC<WithLabelInputFieldProps> = ({
         id={id}
         className={`with-label-input-field ${view_only ? "disabled" : ""}`}
         type={type}
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

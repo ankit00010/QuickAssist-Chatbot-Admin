@@ -1,0 +1,93 @@
+.content {
+  border: 5px solid var(--green-color);
+  padding: 5rem;
+  width: 70vw;
+  height: auto;
+  border-radius: 5%;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+.input-box-temp {
+  margin-right: 26px;
+}
+.input-box{
+    margin-bottom: 1rem;
+}
+.input-box-temp {
+  width: 70%;
+  min-height: 46px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  outline: none;
+  /* text style */
+  color: var(--black-color);
+  font-size: 16px;
+  font-weight: var(--regular-font-weight);
+  padding: 0px 16px;
+  background: var(--background);
+}
+
+.add-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--green-color);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.keywords-list {
+  display: flex;
+  gap: 10px;
+  color: var(--black-color);
+  font-size: 16px;
+}
+
+.keywords-item {
+  align-items: center;
+  font-size: 16px;
+  background-color: var(--green-color);
+  padding: 5px;
+  margin-top: 1rem;
+  border-radius: 2px;
+}
+
+
+.form-submit-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+.submit-btn{
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: darkgreen;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.clear-button{
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--grey-color);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}

@@ -1,11 +1,14 @@
-import React from 'react';
+import AddFaqContainer from "@/container/add-faq-container";
+import { FunctionComponent } from "react";
 
-const AddFaq = () => {
-    return (
-        <div>
-            Add Faq
-        </div>
-    );
+interface AddFaqsProps {
+    
 }
-
-export default AddFaq;
+ 
+const AddBlog: FunctionComponent<AddFaqsProps> = () => {
+    return ( <main>
+        <AddFaqContainer/>
+    </main> );
+}
+ 
+export default AddBlog;
