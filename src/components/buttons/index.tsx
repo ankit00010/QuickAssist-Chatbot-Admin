@@ -1,4 +1,4 @@
-import { FC, CSSProperties, MouseEventHandler } from "react";
+import { FC, MouseEventHandler } from "react";
 import "./style.css";
 
 interface CustomButtonProps {

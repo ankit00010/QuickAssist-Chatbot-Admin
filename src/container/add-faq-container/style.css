@@ -68,6 +68,11 @@
 
 }
 
+.error-text {
+  color: #ff4d4d;
+  font-size: 12px;
+}
+
 .submit-btn{
     padding: 10px 16px;
     border: none;

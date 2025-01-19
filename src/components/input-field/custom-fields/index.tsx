@@ -1,12 +1,10 @@
 "use client";
 
-import { CancelIcon } from "@/components/icons/cancel-icon";
+import  CancelIcon  from "@/public/icons/cancel.svg";
 import "./style.css";
 import {
   ChangeEvent,
-  Dispatch,
   FunctionComponent,
-  useEffect,
   useState,
 } from "react";
 

@@ -9,9 +9,8 @@
   import "./style.css";
   import { useRouter } from "next/navigation";
 
-  interface LoginContainerProps {}
 
-  const LoginContainer: FunctionComponent<LoginContainerProps> = () => {
+  const LoginContainer: FunctionComponent = () => {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
@@ -94,6 +93,7 @@
             <h2 className="login-text">Log in</h2>
             <form onSubmit={handleSubmit} className="login-form">
               <WithLabelInputField
+                name="email"
                 label="Email Id"
                 placeholder="Enter Email Id"
                 value={email}
@@ -102,6 +102,7 @@
               />
               <div className="password-container">
                 <WithLabelInputField
+                name="password"
                   label="Password"
                   placeholder="Enter Password"
                   type={showPassword ? "text" : "password"}

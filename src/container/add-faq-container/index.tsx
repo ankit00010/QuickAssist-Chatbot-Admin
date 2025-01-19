@@ -13,11 +13,6 @@ const AddFaqContainer = () => {
   });
   const [temp, setTemp] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(faq);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFaq((prev) => ({
@@ -43,6 +38,70 @@ const AddFaqContainer = () => {
       setTemp("");
     }
   };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    let hasErrors = false;
+    const newErrors: {
+      question?: string;
+      answer?: string;
+      keywords?: string;
+      context?: string;
+    } = {};
+
+    // Validate question
+    if (faq.question.trim() === "") {
+      newErrors.question = "Enter Question Please";
+      hasErrors = true;
+    }
+
+    // Validate answer
+    if (faq.answer.trim() === "") {
+      newErrors.answer = "Enter Answer Please";
+      hasErrors = true;
+    }
+
+    // Validate keywords
+    if (faq.keywords.length === 0 && temp.trim() === "") {
+      newErrors.keywords = "Enter keywords Please";
+      hasErrors = true;
+    }
+
+    // Validate context
+    if (faq.context.trim() === "") {
+      newErrors.context = "Enter context Please";
+      hasErrors = true;
+    }
+
+    // Update errors state if there are any errors
+    if (hasErrors) {
+      setErrors(newErrors);
+      return; // Stop further processing if validation fails
+    }
+
+    // Add `temp` to `keywords` if it's not empty and not already added
+    const updatedKeywords =
+      temp.trim() !== "" && faq.keywords.length === 0
+        ? [...faq.keywords, temp.trim()]
+        : faq.keywords;
+
+     // Log the updated FAQ
+  console.log("FAQ submitted:", {
+    ...faq,
+    keywords: updatedKeywords,
+  });
+
+
+    // Reset errors and FAQ state if needed
+    setErrors({});
+    setFaq({
+      question: "",
+      answer: "",
+      keywords: [],
+      context: "",
+    });
+    setTemp("");
+  };
 
   const clearAll = () => {
     setFaq({
@@ -51,6 +110,7 @@ const AddFaqContainer = () => {
       keywords: [],
       context: "",
     });
+    setTemp("");
   };
 
   return (
@@ -100,6 +160,7 @@ const AddFaqContainer = () => {
             </div>
 
             <div className="keywords-list">
+              <span className="error-text">{errors.keywords}</span>
               {faq.keywords.map((item, index) => (
                 <span key={index} className="keywords-item">
                   {item}
