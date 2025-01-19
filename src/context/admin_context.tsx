@@ -39,13 +39,13 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       endpoint: `api/add-data`,
       data: faqData,
     });
-    const responseData: any = await response.data;
+    const responseData = await response.data;
     console.log("Response Data is ", responseData);
 
     if (response.code === 200) {
-      alert(responseData.data.message);
+      alert(responseData.message);
     } else {
-      alert(responseData.data.message);
+      alert(responseData.message);
     }
   };
   const admin_context_value = { isAdmin, setAdmin, addFaqApi };

@@ -3,7 +3,8 @@ import { ResponseType } from "@/types/Response_Types";
 interface FetchServiceProps {
   method: string;
   endpoint: string;
-  data?: { [key: string]: unknown } | FormData;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: { [key: string]: any } | FormData;
 }
 
 /**
