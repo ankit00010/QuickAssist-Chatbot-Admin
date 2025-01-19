@@ -1,10 +1,12 @@
 "use client";
 import WithLabelInputField from "@/components/input-field/withLabel-input";
 import { AddFaqsType } from "@/types/add_faqs";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./style.css";
+import { AdminContext, AdminContextType } from "@/context/admin_context";
 
 const AddFaqContainer = () => {
+  const { addFaqApi } = useContext(AdminContext) as AdminContextType;
   const [faq, setFaq] = useState<AddFaqsType>({
     question: "",
     answer: "",
@@ -38,7 +40,7 @@ const AddFaqContainer = () => {
       setTemp("");
     }
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
     let hasErrors = false;
@@ -85,13 +87,14 @@ const AddFaqContainer = () => {
         ? [...faq.keywords, temp.trim()]
         : faq.keywords;
 
-     // Log the updated FAQ
-  console.log("FAQ submitted:", {
-    ...faq,
-    keywords: updatedKeywords,
-  });
+    // Log the updated FAQ
+    console.log("FAQ submitted:", {
+      ...faq,
+      keywords: updatedKeywords,
+    });
 
-
+    
+    await addFaqApi(faq.question,faq.answer,updatedKeywords,faq.context);
     // Reset errors and FAQ state if needed
     setErrors({});
     setFaq({

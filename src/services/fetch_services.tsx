@@ -3,7 +3,7 @@ import { ResponseType } from "@/types/Response_Types";
 interface FetchServiceProps {
   method: string;
   endpoint: string;
-  data?: Record<string, unknown> | FormData; 
+  data?: { [key: string]: any } | FormData;
 }
 
 /**
@@ -41,4 +41,3 @@ export const fetchService = async (
 
   return res;
 };
-
