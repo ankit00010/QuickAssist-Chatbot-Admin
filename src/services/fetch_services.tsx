@@ -3,7 +3,7 @@ import { ResponseType } from "@/types/Response_Types";
 interface FetchServiceProps {
   method: string;
   endpoint: string;
-  data?: { [key: string]: any } | FormData;
+  data?: { [key: string]: unknown } | FormData;
 }
 
 /**

@@ -1,6 +1,5 @@
 "use client";
 import { fetchService } from "@/services/fetch_services";
-import { AddFaqsType } from "@/types/add_faqs";
 import React, { createContext, ReactNode, useState } from "react";
 
 export interface AdminContextType {
