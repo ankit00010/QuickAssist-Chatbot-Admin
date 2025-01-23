@@ -66,17 +66,17 @@
       if (!hasError) {
         // Simulate a login check
         const isValidLogin =
-          email === "user@corbin.com" && password === "password123";
+          email === "admin@gmail.com" && password === "test1234";
 
         if (isValidLogin) {
           console.log("Logging in with", { email, password });
-          router.push("/upload");
+          router.push("/dashboard");
         } else {
           // Set errors based on which field is incorrect
           newErrors.email =
-            email !== "user@corbin.com" ? "Invalid email or password" : undefined;
+            email !== "admin@gmail.com" ? "Invalid email or password" : undefined;
           newErrors.password =
-            password !== "password123" ? "Invalid email or password" : undefined;
+            password !== "test1234" ? "Invalid email or password" : undefined;
 
           setErrors(newErrors);
         }
