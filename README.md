@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Admin Panel for WhatsApp Chatbot Management 🖥️[In Progress]
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+**Project Name:** WhatsApp Chatbot Admin Panel  
+**Version:** 1.0  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The Admin Panel is a comprehensive platform built to manage and optimize the functionality of the WhatsApp chatbot. It allows administrators to handle FAQs, monitor user interactions, and improve chatbot responses by training it with unanswered questions. This tool provides a seamless interface for better chatbot management and user engagement, following clean architecture principles for scalability and maintainability.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **FAQ Management**: 
+  - Add, update, and delete frequently asked questions (FAQs).  
+  - Train the chatbot by reviewing and adding responses for unanswered questions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Analytics and Reports**:  
+  - Monitor total users connected with chatbot.  
+  - Generate insights to identify areas for improvement.
 
-## Learn More
+- **Broadcast Messaging**:  
+  - Send announcements or updates to all users efficiently.  
 
-To learn more about Next.js, take a look at the following resources:
+- **Secure Login**:  
+  - Added authentication to ensure only authorized admins can access the platform.  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Problem Solved
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The Admin Panel streamlines the management of chatbot operations by providing an intuitive interface for administrators. It reduces the time required to train the chatbot and ensures that users receive accurate, up-to-date responses, improving customer satisfaction and engagement. By following clean architecture principles, the system ensures better scalability, reliability, and security.
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Frontend**: 
+  - Next.js  
+  - TypeScript  
+  - CSS  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##Future Enhancements
+  -Advanced Analytics Dashboard: Provide more detailed insights into user behavior and chatbot performance.
+  -Multi-Language Support: Enable FAQs and responses in multiple languages.
