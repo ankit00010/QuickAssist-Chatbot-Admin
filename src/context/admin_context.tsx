@@ -1,7 +1,6 @@
 "use client";
 import { fetchService } from "@/services/fetch_services";
 import { AuthTypes } from "@/types/Auth_types";
-import router from "next/navigation";
 import React, {
   ChangeEvent,
   createContext,
@@ -57,8 +56,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
     console.log("Data in Context", faqData);
     if (!token) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      router.push("/");
+     return  router.push("/");
     }
     const response = await fetchService({
       method: "POST",
