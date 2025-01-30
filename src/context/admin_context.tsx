@@ -6,7 +6,6 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
-  useEffect,
   useState,
 } from "react";
 export interface AdminContextType {
@@ -58,6 +57,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
     console.log("Data in Context", faqData);
     if (!token) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
       router.push("/");
     }
     const response = await fetchService({
