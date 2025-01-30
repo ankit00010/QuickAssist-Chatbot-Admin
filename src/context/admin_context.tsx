@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
+  useEffect,
   useState,
 } from "react";
 export interface AdminContextType {
@@ -32,10 +33,17 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
   const [isAdmin, setAdmin] = useState(false);
   const [otp, setOtp] = useState("");
-  const [token, setToken] = useState<string | null>(() => {
-    const res = localStorage.getItem("token");
-    return res ? JSON.parse(res) : null;
-  });
+  const [token, setToken] = useState<string | null>(null);
+
+  //Setting token
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(JSON.parse(storedToken));
+    }
+  }, []);
+
+
   //Add FAQ Api
 
   const handleOtp = (e: ChangeEvent<HTMLInputElement>) => {
