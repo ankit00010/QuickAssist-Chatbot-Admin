@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   FormEvent,
   useContext,
+  useEffect,
 } from "react";
 import Image from "next/image";
 import hideIcon from "@/public/icons/hide.png";
@@ -16,14 +17,16 @@ import "./style.css";
 import { useRouter } from "next/navigation";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { ScaleLoader } from "react-spinners";
 const LoginContainer: FunctionComponent = () => {
-  const { loginApi, handleOtp, otp ,verifyOtp} = useContext(
+  const { loginApi, handleOtp, otp, verifyOtp } = useContext(
     AdminContext
   ) as AdminContextType;
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{
     email?: string;
     password?: string;
@@ -31,7 +34,7 @@ const LoginContainer: FunctionComponent = () => {
   }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
-
+  const [time, setTime] = useState(60);
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -57,6 +60,8 @@ const LoginContainer: FunctionComponent = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setTime(60);
+
     let hasError = false;
     const newErrors: { email?: string; password?: string } = {};
 
@@ -77,14 +82,19 @@ const LoginContainer: FunctionComponent = () => {
     }
 
     if (!hasError) {
+      setLoading(true);
+
       // Simulate a login check
       const auth_data = {
         email,
         password,
       };
+
       const isValidLogin = await loginApi(auth_data);
 
       if (isValidLogin) {
+        setLoading(false);
+
         setIsVerified(true);
       } else {
         // Set errors based on which field is incorrect
@@ -92,30 +102,52 @@ const LoginContainer: FunctionComponent = () => {
           email !== "admin@gmail.com" ? "Invalid email or password" : undefined;
         newErrors.password =
           password !== "test1234" ? "Invalid email or password" : undefined;
+        setLoading(false);
 
         setErrors(newErrors);
       }
     } else {
+      setLoading(false);
+
       setErrors(newErrors);
       setIsVerified(false);
     }
   };
 
-  const handleOtpVerification =async (event: FormEvent) => {
+  const handleOtpVerification = async (event: FormEvent) => {
     event.preventDefault();
 
     if (!otp) {
       setErrors({
-        otp:"Please Enter otp"
-      })
+        otp: "Please Enter otp",
+      });
     }
-    const result=await verifyOtp();
+    const result = await verifyOtp();
     if (result) {
-      router.push("/dashboard")
+      router.push("/dashboard");
     }
-
   };
 
+  //Start timer after the Otp Conditions met
+  useEffect(() => {
+    if (isVerified && time > 0) {
+      const interval = setInterval(() => {
+        setTime((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval); // Stop the timer at 0
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isVerified, time]);
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   return (
     <section className="login-main-container">
       <div className="area">
@@ -165,11 +197,21 @@ const LoginContainer: FunctionComponent = () => {
                     </button>
                   </div>
                   <div className="login-btn">
-                    <CustomButton
-                      text={"Login"}
-                      width={"-webkit-fill-available"}
-                      onClick={() => {}}
-                    />
+                    {loading === true ? (
+                      <div className="loader">
+                        <ScaleLoader
+                          color="#093132"
+                          loading={loading}
+                          aria-label="Loading Spinner"
+                        />
+                      </div>
+                    ) : (
+                      <CustomButton
+                        text={"Login"}
+                        width={"-webkit-fill-available"}
+                        onClick={() => {}}
+                      />
+                    )}
                   </div>
                 </form>
               </div>
@@ -193,7 +235,7 @@ const LoginContainer: FunctionComponent = () => {
                       label="OTP"
                       placeholder="Enter OTP"
                       value={otp}
-                      type={showOtp ? "number" : "password"}
+                      type={showOtp ? "text" : "password"}
                       onChange={handleOtp}
                       error={errors.otp}
                       className="login-input-fields"
@@ -209,9 +251,19 @@ const LoginContainer: FunctionComponent = () => {
                       />
                     </button>
                   </div>
+                  <div className="timer">
+                    {time > 0 ? (
+                      <span className="timer-text">
+                        Resend in {formattedMinutes}:{formattedSeconds}
+                      </span>
+                    ) : (
+                      <span className="resend-otp-text" onClick={handleSubmit}>Resend Otp</span>
+                    )}
+                  </div>
+
                   <div className="login-btn">
                     <CustomButton
-                      text={"Send Otp"}
+                      text={"Verify"}
                       width={"-webkit-fill-available"}
                       onClick={() => {}}
                     />

@@ -98,11 +98,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       },
     });
     const responseData = await response.data;
+
     if (response.code === 200) {
-      alert(responseData.message);
+    console.log(response);
+    
       return true;
     } else {
-      alert(responseData.message);
       return false;
     }
   };
@@ -118,14 +119,14 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     });
     const responseData = await response.data;
     if (response.code === 200) {
-      alert(responseData.message);
+      // alert(responseData.message);
       localStorage.setItem("token", JSON.stringify(responseData?.token));
       setToken(responseData?.token);
       setOtp("");
       return true;
     } else {
       setOtp("");
-      alert(responseData.message);
+      // alert(responseData.message);
       return false;
     }
   };

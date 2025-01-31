@@ -172,6 +172,21 @@
   position: relative;
 }
 
+
+.loader{
+  display: flex;
+  justify-content: center;
+}
+
+.timer{
+  display: flex;
+  justify-content: center;
+}
+
+.resend-otp-text{
+  color: #007BFF;
+  cursor: pointer;
+}
 /* .context {
   width: 100%;
   position: absolute;
