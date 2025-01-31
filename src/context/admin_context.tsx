@@ -43,7 +43,6 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, []);
 
-
   //Add FAQ Api
 
   const handleOtp = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +63,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
     console.log("Data in Context", faqData);
     if (!token) {
-     return  router.push("/");
+      return router.push("/");
     }
     const response = await fetchService({
       method: "POST",
@@ -100,10 +99,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const responseData = await response.data;
 
     if (response.code === 200) {
-    console.log(response);
-    
+      console.log(responseData.message);
+
       return true;
     } else {
+      console.log(responseData.message);
+
       return false;
     }
   };
