@@ -1,0 +1,61 @@
+.faq-header-container {
+  width: 100%;
+  display: flex;
+  margin-top: 70px;
+  margin-left: 120px;
+  align-items: center;
+  gap: 20px;
+  position: relative; /* Ensure relative positioning */
+}
+
+.faq-add-text {
+  color: darkgreen;
+  font-size: 15px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.faq-select-category-text {
+  font-weight: 300;
+  font-size: 15px;
+}
+.faq-category-dropdown {
+  width: 200px;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  font-size: 14px;
+}
+
+.faq-select-category-text {
+  flex: 1;
+  text-align: center;
+}
+
+.faq-dropwdown-list {
+  position: absolute;
+  top: 100%;
+  left: 113px;
+  width: 200px;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+  z-index: 10;
+}
+
+.faq-dropwdown-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.faq-dropwdown-list li:hover {
+  background-color: #f0f0f0;
+}

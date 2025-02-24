@@ -29,6 +29,9 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+
+
+
 .layout-container {
   display: flex;
   height: 100vh;
@@ -39,3 +42,8 @@ body {
 .right_body {
   margin-top: 5vh;
 }
+
+.main-body{
+  width: 100%;
+}
+

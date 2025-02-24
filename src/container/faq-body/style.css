@@ -1,0 +1,104 @@
+.faq-body-container {
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.faq-table {
+  border-collapse: collapse;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.faq-default-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #555;
+  background-color: #f9f9f9;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.faq-table th,
+.faq-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Remove duplicate styles */
+.faq-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Vertical line between columns */
+.faq-table th:not(:last-child),
+.faq-table td:not(:last-child) {
+  border-right: 1px solid #ddd;
+}
+
+/* Header Styling */
+.faq-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* Actions column styling */
+.faq-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Button Styling */
+.action-btn {
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px; /* Ensures uniform button size */
+  height: 35px;
+}
+
+/* Individual button colors */
+
+.edit {
+  background: rgb(3, 144, 190);
+  color: white;
+}
+.delete {
+  background: red;
+  color: white;
+}
+
+.pop-up {
+  position: fixed;
+  top: 20%;
+  left: 60%;
+  transform: translate(-50%, 50%);
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination {
+  position: fixed;
+  top: 80%;
+}

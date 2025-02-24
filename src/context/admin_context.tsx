@@ -20,14 +20,38 @@ export interface AdminContextType {
 
   loginApi: (auth_data: AuthTypes) => Promise<boolean>;
 
+  //Pagination Related Data Types
+  pagination: {
+    page: number;
+    totalPages: number;
+    category: string;
+    totalItems: number;
+  };
+
+  setPagination: React.Dispatch<
+    React.SetStateAction<{
+      page: number;
+      totalPages: number;
+      category: string;
+      totalItems: number;
+    }>
+  >;
+
+  //Delete Data api
+
+  deleteApi: (id: string) => Promise<boolean>;
+
   otp: string;
   handleOtp: (e: ChangeEvent<HTMLInputElement>) => void;
   verifyOtp: () => Promise<boolean>;
+  faqData: FaqsType;
+  setFaqData: React.Dispatch<React.SetStateAction<FaqsType>>;
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
 
 import { useRouter } from "next/navigation";
+import { FaqsType } from "@/types/faq_type";
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
@@ -35,6 +59,20 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [otp, setOtp] = useState("");
   const [token, setToken] = useState<string | null>(null);
 
+  //Pagination based variables
+  const [pagination, setPagination] = useState<{
+    page: number;
+    totalPages: number;
+    category: string;
+    totalItems: number;
+  }>({
+    page: 1,
+    totalPages: 1,
+    category: "",
+    totalItems: 1,
+  });
+
+  const [faqData, setFaqData] = useState<FaqsType>([]);
   //Setting token
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -42,6 +80,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setToken(JSON.parse(storedToken));
     }
   }, []);
+
+  useEffect(() => {
+    console.log("Value of category is ", pagination.category);
+    console.log("Value of page is ", pagination.page);
+    console.log("Value of totalPages is ", pagination.totalPages);
+  }, [pagination]);
 
   //Add FAQ Api
 
@@ -132,6 +176,77 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  //Get Faq Data List
+  const getFaqData = async () => {
+    const storedToken: any = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(JSON.parse(storedToken));
+    } else {
+      router.push("/");
+    }
+
+    const response = await fetchService({
+      method: "GET",
+      endpoint: `api/admin/faqs?page=${pagination.page}&limit=5&category=${
+        pagination.category !== "All" ? pagination.category : ""
+      }`,
+      headers: {
+        Authorization: `Bearer ${JSON.parse(storedToken)}`,
+      },
+    });
+    const responseData = await response.data;
+
+    if (response.code === 200) {
+      console.log("Data fetched => ", responseData);
+      setFaqData(responseData.data);
+      const calculatedTotalPages = Math.max(
+        1,
+        Math.ceil(responseData.totalItems / 5)
+      );
+
+      setPagination((prev) => ({
+        ...prev,
+        page: Math.min(prev.page, calculatedTotalPages), 
+        totalPages: calculatedTotalPages,
+        totalItems: responseData.totalItems,
+      }));
+    } else if (response.code === 403) {
+      router.push("/");
+    } else {
+      console.log(responseData.message);
+    }
+  };
+
+  //Delete Api
+
+  const deleteApi = async (id: string): Promise<boolean> => {
+    if (!token) {
+      router.push("/");
+      alert("Your Session Expired");
+    }
+
+    const response = await fetchService({
+      method: "DELETE",
+      endpoint: `api/admin/delete-data/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const responseData = await response.data;
+    if (response.code === 200) {
+      getFaqData();
+      alert(responseData.message);
+      return true;
+    } else {
+      alert(responseData.message);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    getFaqData();
+  }, [pagination.page, pagination.category]);
   const admin_context_value = {
     isAdmin,
     setAdmin,
@@ -140,6 +255,13 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     otp,
     handleOtp,
     verifyOtp,
+
+    //Pagination Related Data
+    pagination,
+    setPagination,
+    faqData,
+    setFaqData,
+    deleteApi,
   };
 
   return (
