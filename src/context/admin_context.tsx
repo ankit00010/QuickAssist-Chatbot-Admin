@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -177,45 +178,42 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   //Get Faq Data List
-  const getFaqData = async () => {
-    const storedToken: any = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(JSON.parse(storedToken));
-    } else {
-      router.push("/");
-    }
+  const getFaqData = useCallback(async () => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) return router.push("/");
 
-    const response = await fetchService({
-      method: "GET",
-      endpoint: `api/admin/faqs?page=${pagination.page}&limit=5&category=${
-        pagination.category !== "All" ? pagination.category : ""
-      }`,
-      headers: {
-        Authorization: `Bearer ${JSON.parse(storedToken)}`,
-      },
-    });
-    const responseData = await response.data;
+    const token = JSON.parse(storedToken);
+    setToken(token);
 
-    if (response.code === 200) {
-      console.log("Data fetched => ", responseData);
-      setFaqData(responseData.data);
-      const calculatedTotalPages = Math.max(
-        1,
-        Math.ceil(responseData.totalItems / 5)
-      );
+    try {
+      const response = await fetchService({
+        method: "GET",
+        endpoint: `api/admin/faqs?page=${pagination.page}&limit=5&category=${
+          pagination.category !== "All" ? pagination.category : ""
+        }`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
+      if (response.code !== 200) {
+        if (response.code === 403) router.push("/");
+        console.error(response.data?.message || "Failed to fetch FAQ data");
+        return;
+      }
+
+      setFaqData(response.data.data);
       setPagination((prev) => ({
         ...prev,
-        page: Math.min(prev.page, calculatedTotalPages), 
-        totalPages: calculatedTotalPages,
-        totalItems: responseData.totalItems,
+        page: Math.min(
+          prev.page,
+          Math.max(1, Math.ceil(response.data.totalItems / 5))
+        ),
+        totalPages: Math.max(1, Math.ceil(response.data.totalItems / 5)),
+        totalItems: response.data.totalItems,
       }));
-    } else if (response.code === 403) {
-      router.push("/");
-    } else {
-      console.log(responseData.message);
+    } catch (error) {
+      console.error("Error fetching FAQ data:", error);
     }
-  };
+  }, [pagination, setFaqData, setPagination, router]);
 
   //Delete Api
 

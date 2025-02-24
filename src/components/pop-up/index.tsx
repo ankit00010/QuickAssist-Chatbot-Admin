@@ -2,7 +2,6 @@ import React from "react";
 import "./style.css";
 interface PopupProps {
   message: string;
-  confirmStatus?: string;
   handleStatus?: (status: boolean) => void;
   action1?: string;
   action2?: string;
@@ -10,7 +9,6 @@ interface PopupProps {
 
 const PopUp: React.FC<PopupProps> = ({
   message,
-  confirmStatus,
   handleStatus,
   action1,
   action2,

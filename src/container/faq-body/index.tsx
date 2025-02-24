@@ -2,17 +2,14 @@
 import React, { useContext, useState } from "react";
 import "./style.css";
 import { BiEdit } from "react-icons/bi";
-import { BsEye } from "react-icons/bs";
 import { TbTrash } from "react-icons/tb";
 import PopUp from "@/components/pop-up";
-import { div } from "framer-motion/client";
 import FAQPagination from "@/components/pagination";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 const FAQBody = () => {
   const { faqData, setFaqData, deleteApi } = useContext(
     AdminContext
   ) as AdminContextType;
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [popUp, setPopUp] = useState<boolean>(false);
   const [deleteID, setDeleteID] = useState<string | null>(null);
   // const [faqData, setFaqData] = useState([
