@@ -37,6 +37,7 @@ export interface AdminContextType {
       totalItems: number;
     }>
   >;
+  getFaqData:()=>void;
 
   //Delete Data api
 
@@ -47,6 +48,8 @@ export interface AdminContextType {
   verifyOtp: () => Promise<boolean>;
   faqData: FaqsType;
   setFaqData: React.Dispatch<React.SetStateAction<FaqsType>>;
+
+  
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -260,6 +263,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     faqData,
     setFaqData,
     deleteApi,
+    getFaqData
   };
 
   return (
