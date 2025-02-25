@@ -6,6 +6,7 @@ import { TbTrash } from "react-icons/tb";
 import PopUp from "@/components/pop-up";
 import FAQPagination from "@/components/pagination";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
+import { useRouter } from "next/navigation";
 const FAQBody = () => {
   const { faqData, setFaqData, deleteApi } = useContext(
     AdminContext
@@ -44,7 +45,7 @@ const FAQBody = () => {
   //       "Businesses can improve customer retention by providing excellent service, personalized offers, loyalty programs, and engaging communication.",
   //   },
   // ]);
-
+  const router=useRouter();
   const handleDeleteClick = (_id: string) => {
     setDeleteID(_id);
     setPopUp(true);
@@ -81,7 +82,7 @@ const FAQBody = () => {
                 <td>{faq.answer}</td>
                 <td className="faq-actions">
                   <button className="action-btn edit">
-                    <BiEdit />
+                    <BiEdit onClick={()=>{router.push(`/edit/${faq.faq_id}`)}} />
                   </button>
                   <button
                     className="action-btn delete"

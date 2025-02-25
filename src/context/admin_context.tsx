@@ -9,35 +9,24 @@ import React, {
   useEffect,
   useState,
 } from "react";
+
+export const AdminContext = createContext<AdminContextType | null>(null);
+
+import { useRouter } from "next/navigation";
+import { FaqsTypeList } from "@/types/faq_type";
+import { paginationType } from "@/types/pagination_types";
+import { FAQsDataType } from "@/types/faqs_data_type";
 export interface AdminContextType {
   isAdmin: boolean;
   setAdmin: (adminStatus: boolean) => void;
-  addFaqApi: (
-    question: string,
-    answer: string,
-    keywords: string[],
-    context: string
-  ) => void;
 
   loginApi: (auth_data: AuthTypes) => Promise<boolean>;
 
   //Pagination Related Data Types
-  pagination: {
-    page: number;
-    totalPages: number;
-    category: string;
-    totalItems: number;
-  };
+  pagination: paginationType;
 
-  setPagination: React.Dispatch<
-    React.SetStateAction<{
-      page: number;
-      totalPages: number;
-      category: string;
-      totalItems: number;
-    }>
-  >;
-  getFaqData:()=>void;
+  setPagination: React.Dispatch<React.SetStateAction<paginationType>>;
+  getFaqData: () => void;
 
   //Delete Data api
 
@@ -46,16 +35,17 @@ export interface AdminContextType {
   otp: string;
   handleOtp: (e: ChangeEvent<HTMLInputElement>) => void;
   verifyOtp: () => Promise<boolean>;
-  faqData: FaqsType;
-  setFaqData: React.Dispatch<React.SetStateAction<FaqsType>>;
+  faqData: FaqsTypeList;
+  setFaqData: React.Dispatch<React.SetStateAction<FaqsTypeList>>;
 
-  
+  //ADD FAQS Related Type Data
+  faqs: FAQsDataType;
+  setFaqs: React.Dispatch<React.SetStateAction<FAQsDataType>>;
+  addFAQS: () => void;
+
+  //EDIT API
+  editAPI: (id: string) => void;
 }
-
-export const AdminContext = createContext<AdminContextType | null>(null);
-
-import { useRouter } from "next/navigation";
-import { FaqsType } from "@/types/faq_type";
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
@@ -63,20 +53,27 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [otp, setOtp] = useState("");
   const [token, setToken] = useState<string | null>(null);
 
+  //LOADING USESTATE
+
+  //FAQs Data based useState
+
+  const [faqs, setFaqs] = useState<FAQsDataType>({
+    question: "",
+    answer: "",
+    context: "",
+    keywords: "",
+  });
+
   //Pagination based variables
-  const [pagination, setPagination] = useState<{
-    page: number;
-    totalPages: number;
-    category: string;
-    totalItems: number;
-  }>({
+  const [pagination, setPagination] = useState<paginationType>({
     page: 1,
     totalPages: 1,
     category: "",
     totalItems: 1,
   });
 
-  const [faqData, setFaqData] = useState<FaqsType>([]);
+  //FAQS DATA LIST
+  const [faqData, setFaqData] = useState<FaqsTypeList>([]);
   //Setting token
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -97,26 +94,25 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setOtp(e.target.value);
   };
 
-  const addFaqApi = async (
-    question: string,
-    answer: string,
-    keywords: string[],
-    context: string
-  ) => {
-    const faqData = {
-      question,
-      answer,
-      keywords,
-      context,
-    };
-    console.log("Data in Context", faqData);
+  const addFAQS = async () => {
     if (!token) {
       return router.push("/");
     }
+    const transformedKeywords: string[] = faqs.keywords
+      ? faqs.keywords.split(",").map((kw: string) => kw.trim())
+      : [];
+
+    console.log("TransformKeywords are", transformedKeywords);
+
     const response = await fetchService({
       method: "POST",
       endpoint: `api/admin/add-data`,
-      data: faqData,
+      data: {
+        question: faqs.question,
+        answer: faqs.answer,
+        keywords: transformedKeywords,
+        context: faqs.context,
+      },
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -128,6 +124,50 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     if (response.code === 200) {
       alert(responseData.message);
+    } else {
+      alert(responseData.message);
+    }
+  };
+
+  //Edit API
+
+  const editAPI = async (id: string) => {
+    if (!id) {
+      alert("Something Went Wrong .Please Try Again Later!!!");
+    }
+    if (!token) {
+      return router.push("/");
+    }
+    const transformedKeywords: string[] = faqs.keywords
+      ? faqs.keywords.split(",").map((kw: string) => kw.trim())
+      : [];
+
+    const response = await fetchService({
+      method: "PUT",
+      endpoint: `api/admin/edit-data/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        fields: {
+          question: faqs.question,
+          answer: faqs.answer,
+          keywords: transformedKeywords,
+          context: faqs.context,
+        },
+      },
+    });
+
+    const responseData = await response.data;
+    if (response.code === 201) {
+      alert(responseData.message);
+      router.push("/faqs");
+      setFaqs({
+        question: "",
+        answer: "",
+        context: "",
+        keywords: "",
+      });
     } else {
       alert(responseData.message);
     }
@@ -251,7 +291,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const admin_context_value = {
     isAdmin,
     setAdmin,
-    addFaqApi,
+
     loginApi,
     otp,
     handleOtp,
@@ -263,7 +303,15 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     faqData,
     setFaqData,
     deleteApi,
-    getFaqData
+    getFaqData,
+
+    //ADD FAQS Related Data
+    faqs,
+    setFaqs,
+    addFAQS,
+
+    //EDIT API
+    editAPI,
   };
 
   return (

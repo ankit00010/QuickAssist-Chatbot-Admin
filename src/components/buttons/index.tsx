@@ -9,6 +9,8 @@ interface CustomButtonProps {
   color?: string;
   border?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset";
+  variant: "primary" | "secondary" | "outline" | "danger";
 }
 
 const CustomButton: FC<CustomButtonProps> = ({
@@ -19,11 +21,14 @@ const CustomButton: FC<CustomButtonProps> = ({
   color,
   border,
   onClick,
+  variant="primary",
+  type
 }) => (
   <button
-    className="btn-component"
+    className={`btn-component ${type} ${variant} `}
     style={{ width, height, backgroundColor, color, border }}
     onClick={onClick}
+    type={type}
   >
     {text}
   </button>

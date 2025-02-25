@@ -1,6 +1,6 @@
 "use client"
 import FAQBody from "@/container/faq-body";
-import FaqHeader from "@/container/faq-header";
+import Title from "@/container/faq-header";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 import React, { useContext, useEffect } from "react";
 
@@ -11,7 +11,7 @@ const FAQs = () => {
   }, []);
   return (
     <div>
-      <FaqHeader />
+      <Title/>
       <FAQBody />
     </div>
   );
