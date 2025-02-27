@@ -2,14 +2,17 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
 interface CustomInputFieldProps {
-  label: string;
+  label?: string;
   type?: string;
   placeholder?: string;
   value: string | number;
   onChange: (value: string | number) => void;
   required?: boolean;
   errorMessage?: string;
-  resetTrigger: boolean;
+  resetTrigger?: boolean;
+  readonly?: boolean;
+  textAreaHeight?: string;
+  textAreaWidth?: string;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -20,7 +23,10 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
   onChange,
   required = false,
   errorMessage = "",
-  resetTrigger,
+  resetTrigger = false,
+  readonly = false,
+  textAreaHeight,
+  textAreaWidth,
 }) => {
   const [touched, setTouched] = useState(false);
 
@@ -36,11 +42,16 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
           className={`input-field ${
             touched && required && !value ? "input-error" : ""
           }`}
+          style={{
+            minHeight: `${textAreaHeight && textAreaHeight}`,
+            minWidth: `${textAreaWidth && textAreaWidth}`,
+          }}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onBlur={() => setTouched(true)}
           required={required}
+          readOnly={readonly}
         />
       ) : (
         <input
@@ -56,6 +67,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
           }
           onBlur={() => setTouched(true)}
           required={required}
+          readOnly={readonly}
         />
       )}
       {touched && required && !value && (

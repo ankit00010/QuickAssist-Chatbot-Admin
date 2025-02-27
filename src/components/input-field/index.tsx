@@ -3,8 +3,8 @@ import { FC, ChangeEvent } from "react";
 import "./style.css";
 
 interface InputFieldProps {
-  id?: string;
-  value?: string;
+  id: string;
+  value: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   type?: string;

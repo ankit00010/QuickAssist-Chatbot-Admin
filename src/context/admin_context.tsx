@@ -5,7 +5,6 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
-  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -16,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { FaqsTypeList } from "@/types/faq_type";
 import { paginationType } from "@/types/pagination_types";
 import { FAQsDataType } from "@/types/faqs_data_type";
+import { AdminMessageResponse } from "@/types/admin_message_response";
 export interface AdminContextType {
   isAdmin: boolean;
   setAdmin: (adminStatus: boolean) => void;
@@ -45,6 +45,9 @@ export interface AdminContextType {
 
   //EDIT API
   editAPI: (id: string) => void;
+
+  //SEND ADMIN API
+  adminSendMessage: (value: string) => Promise<AdminMessageResponse>;
 }
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -220,8 +223,8 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  //Get Faq Data List
-  const getFaqData = useCallback(async () => {
+  //Get Faq Data List;
+  const getFaqData = async () => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) return router.push("/");
 
@@ -256,7 +259,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     } catch (error) {
       console.error("Error fetching FAQ data:", error);
     }
-  }, [pagination, setFaqData, setPagination, router]);
+  };
 
   //Delete Api
 
@@ -288,6 +291,35 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     getFaqData();
   }, [pagination.page, pagination.category]);
+
+  //ADMIN SEND MESSAGE API
+
+  const adminSendMessage = async (content: string) => {
+    if (!content) {
+      console.error("Empty message...");
+    }
+    const response = await fetchService({
+      method: "POST",
+      endpoint: "api/admin/admin-message",
+      data: {
+        message: content,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const responseData: AdminMessageResponse = await response.data;
+    if (response.code === 200) {
+      console.log(responseData.message);
+      return responseData;
+    } else {
+      console.log(responseData.message);
+
+      return responseData;
+    }
+  };
+
   const admin_context_value = {
     isAdmin,
     setAdmin,
@@ -312,6 +344,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     //EDIT API
     editAPI,
+
+    //SEND ADMIN API
+    adminSendMessage,
   };
 
   return (

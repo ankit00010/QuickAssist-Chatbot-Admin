@@ -8,7 +8,7 @@ const FAQs = () => {
   const {getFaqData}=useContext(AdminContext) as  AdminContextType;
   useEffect(() => {
   getFaqData();
-  }, []);
+  }, [getFaqData]);
   return (
     <div>
       <Title/>

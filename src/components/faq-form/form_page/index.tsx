@@ -1,7 +1,7 @@
 "use client";
 import CustomInputField from "@/components/input-fields/custom_fields";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
-import React, {  useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./style.css";
 import CustomButton from "@/components/buttons";
 import { useRouter } from "next/navigation";
@@ -24,24 +24,23 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevents page reload
-  
-  
+
     // setLoading(true);
-  
+
     // Determine whether to edit or add new FAQ
     if (values === "edit" && id) {
       await editAPI(id);
     } else {
       await addFAQS();
     }
-  
+
     // setLoading(false);
-  
+
     // Reset the form fields and trigger any required state updates
     setFaqs({ question: "", answer: "", context: "", keywords: "" });
     setResetTrigger((prev) => !prev);
   };
-  
+
   const resetFaqForm = () => {
     setFaqs({
       question: "",
