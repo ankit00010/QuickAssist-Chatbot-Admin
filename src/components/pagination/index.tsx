@@ -32,6 +32,7 @@ const FAQPagination = () => {
       ...prev,
       page: currentPage,
     }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
   return (
     <div className="pagination-container">

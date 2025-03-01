@@ -71,6 +71,7 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
           : "",
       });
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   return (
     <div className="faq-form-container">

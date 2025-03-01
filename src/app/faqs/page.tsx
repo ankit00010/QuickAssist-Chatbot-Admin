@@ -5,10 +5,12 @@ import { AdminContext, AdminContextType } from "@/context/admin_context";
 import React, { useContext, useEffect } from "react";
 
 const FAQs = () => {
-  const {getFaqData}=useContext(AdminContext) as  AdminContextType;
+  const {getFaqData,pagination}=useContext(AdminContext) as  AdminContextType;
   useEffect(() => {
+    
   getFaqData();
-  }, [getFaqData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination.page, pagination.category]);
   return (
     <div>
       <Title/>

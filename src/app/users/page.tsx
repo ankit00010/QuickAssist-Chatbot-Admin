@@ -1,9 +1,10 @@
+import UserContainer from '@/container/user-container';
 import React from 'react';
 
 const Users = () => {
     return (
         <div>
-           Users
+           <UserContainer/>
         </div>
     );  
 }

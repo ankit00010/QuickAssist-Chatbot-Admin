@@ -26,7 +26,9 @@ const FaqHeader = () => {
 
   return (
     <div className="faq-header-container">
+      
       <div>
+        
         <span
           onClick={() => {
             router.push("/add-faqs");

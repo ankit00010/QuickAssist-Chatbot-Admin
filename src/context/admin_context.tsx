@@ -55,7 +55,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAdmin, setAdmin] = useState(false);
   const [otp, setOtp] = useState("");
   const [token, setToken] = useState<string | null>(null);
-
+  // const [totalUnAnsweredQuestions, setTotalUnAnsweredQuestions] = useState(0);
   //LOADING USESTATE
 
   //FAQs Data based useState
@@ -85,11 +85,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("Value of category is ", pagination.category);
-    console.log("Value of page is ", pagination.page);
-    console.log("Value of totalPages is ", pagination.totalPages);
-  }, [pagination]);
+  // useEffect(() => {
+  //   console.log("Value of category is ", pagination.category);
+  //   console.log("Value of page is ", pagination.page);
+  //   console.log("Value of totalPages is ", pagination.totalPages);
+  //   console.log("Value of Un Answered Questions is ", totalUnAnsweredQuestions);
+  // }, [pagination]);
 
   //Add FAQ Api
 
@@ -245,17 +246,20 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         console.error(response.data?.message || "Failed to fetch FAQ data");
         return;
       }
+      const responseData = await response.data;
+      console.log("Response Data is ", responseData);
 
-      setFaqData(response.data.data);
+      setFaqData(responseData.data);
       setPagination((prev) => ({
         ...prev,
         page: Math.min(
           prev.page,
-          Math.max(1, Math.ceil(response.data.totalItems / 5))
+          Math.max(1, Math.ceil(responseData.totalItems / 5))
         ),
-        totalPages: Math.max(1, Math.ceil(response.data.totalItems / 5)),
-        totalItems: response.data.totalItems,
+        totalPages: Math.max(1, Math.ceil(responseData.totalItems / 5)),
+        totalItems:responseData.totalItems,
       }));
+      // setTotalUnAnsweredQuestions(responseData.unAnsQuestionsCount);
     } catch (error) {
       console.error("Error fetching FAQ data:", error);
     }
@@ -288,9 +292,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    getFaqData();
-  }, [pagination.page, pagination.category]);
+
 
   //ADMIN SEND MESSAGE API
 

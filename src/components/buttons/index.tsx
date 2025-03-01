@@ -10,7 +10,7 @@ interface CustomButtonProps {
   border?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
-  variant: "primary" | "secondary" | "outline" | "danger";
+  variant?: "primary" | "secondary" | "outline" |"success" |"danger";
 }
 
 const CustomButton: FC<CustomButtonProps> = ({
