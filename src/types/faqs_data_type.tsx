@@ -3,4 +3,4 @@ export type FAQsDataType={
     answer:string;
     context:string;
     keywords:string;
-};
+}[];

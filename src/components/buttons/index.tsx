@@ -21,7 +21,7 @@ const CustomButton: FC<CustomButtonProps> = ({
   color,
   border,
   onClick,
-  variant="primary",
+  variant,
   type
 }) => (
   <button

@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -16,6 +17,7 @@ import { FaqsTypeList } from "@/types/faq_type";
 import { paginationType } from "@/types/pagination_types";
 import { FAQsDataType } from "@/types/faqs_data_type";
 import { AdminMessageResponse } from "@/types/admin_message_response";
+import { TrainingDetails } from "@/types/training_Data_details";
 export interface AdminContextType {
   isAdmin: boolean;
   setAdmin: (adminStatus: boolean) => void;
@@ -48,6 +50,16 @@ export interface AdminContextType {
 
   //SEND ADMIN API
   adminSendMessage: (value: string) => Promise<AdminMessageResponse>;
+
+  //TOTAL QUESTION NOS DATA
+  getQuestionsData: (limit: number, id: string) => Promise<boolean>;
+
+  //Training Data Details
+  details: TrainingDetails;
+  setDetails: React.Dispatch<React.SetStateAction<TrainingDetails>>;
+
+  //Delete the preivous assigned Data
+  deletePreviousQuestions: () => Promise<boolean>;
 }
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -55,24 +67,32 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAdmin, setAdmin] = useState(false);
   const [otp, setOtp] = useState("");
   const [token, setToken] = useState<string | null>(null);
-  // const [totalUnAnsweredQuestions, setTotalUnAnsweredQuestions] = useState(0);
+
   //LOADING USESTATE
 
   //FAQs Data based useState
 
-  const [faqs, setFaqs] = useState<FAQsDataType>({
-    question: "",
-    answer: "",
-    context: "",
-    keywords: "",
-  });
-
+  const [faqs, setFaqs] = useState<FAQsDataType>([
+    {
+      question: "",
+      answer: "",
+      context: "",
+      keywords: "", // Fix: Should be an array
+    },
+  ]);
   //Pagination based variables
   const [pagination, setPagination] = useState<paginationType>({
     page: 1,
     totalPages: 1,
     category: "",
     totalItems: 1,
+  });
+
+  const [details, setDetails] = useState<TrainingDetails>({
+    total_questions: 0,
+    user_Id: "",
+    limit: 0,
+    assigned_questions: 0,
   });
 
   //FAQS DATA LIST
@@ -84,6 +104,10 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setToken(JSON.parse(storedToken));
     }
   }, []);
+
+  //Usesate for the questions that are not answered and needed to be train
+
+  const [train_questions, setTrainQuestions] = useState([]);
 
   // useEffect(() => {
   //   console.log("Value of category is ", pagination.category);
@@ -102,20 +126,19 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (!token) {
       return router.push("/");
     }
-    const transformedKeywords: string[] = faqs.keywords
-      ? faqs.keywords.split(",").map((kw: string) => kw.trim())
-      : [];
-
-    console.log("TransformKeywords are", transformedKeywords);
+    const transformedFAQs = faqs.map((faq) => ({
+      question: faq.question,
+      answer: faq.answer,
+      keywords: faq.keywords.split(",").map((kw) => kw.trim()), // ✅ Convert string to array
+      context: faq.context,
+    }));
+    console.log("TransformKeywords are", transformedFAQs);
 
     const response = await fetchService({
       method: "POST",
       endpoint: `api/admin/add-data`,
       data: {
-        question: faqs.question,
-        answer: faqs.answer,
-        keywords: transformedKeywords,
-        context: faqs.context,
+        transformedFAQs,
       },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -142,10 +165,10 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (!token) {
       return router.push("/");
     }
-    const transformedKeywords: string[] = faqs.keywords
-      ? faqs.keywords.split(",").map((kw: string) => kw.trim())
-      : [];
-
+    const transformedFAQ = {
+      ...faqs[0], // Take only the first object
+      keywords: faqs[0].keywords.split(",").map((kw) => kw.trim()), // Convert keywords string to array
+    };
     const response = await fetchService({
       method: "PUT",
       endpoint: `api/admin/edit-data/${id}`,
@@ -154,10 +177,10 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       },
       data: {
         fields: {
-          question: faqs.question,
-          answer: faqs.answer,
-          keywords: transformedKeywords,
-          context: faqs.context,
+          question: transformedFAQ.question,
+          answer: transformedFAQ.answer,
+          keywords: transformedFAQ.keywords,
+          context: transformedFAQ.context,
         },
       },
     });
@@ -166,12 +189,14 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (response.code === 201) {
       alert(responseData.message);
       router.push("/faqs");
-      setFaqs({
-        question: "",
-        answer: "",
-        context: "",
-        keywords: "",
-      });
+      setFaqs([
+        {
+          question: "",
+          answer: "",
+          context: "",
+          keywords: "",
+        },
+      ]);
     } else {
       alert(responseData.message);
     }
@@ -225,7 +250,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   //Get Faq Data List;
-  const getFaqData = async () => {
+  const getFaqData = useCallback(async () => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) return router.push("/");
 
@@ -257,14 +282,21 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           Math.max(1, Math.ceil(responseData.totalItems / 5))
         ),
         totalPages: Math.max(1, Math.ceil(responseData.totalItems / 5)),
-        totalItems:responseData.totalItems,
+        totalItems: responseData.totalItems,
       }));
-      // setTotalUnAnsweredQuestions(responseData.unAnsQuestionsCount);
+      setDetails((prev) => ({
+        ...prev,
+        total_questions: responseData.unAnsQuestionsCount,
+      }));
     } catch (error) {
       console.error("Error fetching FAQ data:", error);
     }
-  };
+  }, [pagination.page, pagination.category]);
 
+  // Call the function when component mounts or when pagination changes
+  useEffect(() => {
+    getFaqData();
+  }, [getFaqData]);
   //Delete Api
 
   const deleteApi = async (id: string): Promise<boolean> => {
@@ -292,8 +324,6 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-
-
   //ADMIN SEND MESSAGE API
 
   const adminSendMessage = async (content: string) => {
@@ -319,6 +349,69 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.log(responseData.message);
 
       return responseData;
+    }
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Api To get the Questions need to train
+
+  const getQuestionsData = async (limit: number, id: string) => {
+    if (!token) {
+      router.push("/");
+    }
+    const response = await fetchService({
+      method: "POST",
+      endpoint: "api/admin/questions/unanswered",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        limit: limit,
+        user_Id: id,
+      },
+    });
+
+    const responseData = await response.data;
+
+    if (responseData.code === 200) {
+      console.log("The Data received is ", responseData);
+      setTrainQuestions(responseData.data.questions_list);
+      setDetails((prev) => ({
+        ...prev,
+        assigned_questions: responseData.data.count,
+      }));
+
+      return true;
+    } else {
+      console.log(responseData.message);
+      return false;
+    }
+  };
+
+  const deletePreviousQuestions = async (): Promise<boolean> => {
+    if (!token) {
+      router.push("/");
+    }
+
+    const response = await fetchService({
+      method: "DELETE",
+      endpoint: `api/admin/questions/unanswered/delete/${details.user_Id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const responseData = await response.data;
+
+    if (responseData.code === 200) {
+      setDetails((prev) => ({
+        ...prev,
+        assigned_questions: 0,
+      }));
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -349,6 +442,17 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     //SEND ADMIN API
     adminSendMessage,
+
+    //TOTAL QUESTIONS NO DATA
+
+    //Api to get the list of the questions that needed to be train
+    getQuestionsData,
+
+    //Training Data Details
+    details,
+    setDetails,
+    //Delete the previous assigned Data
+    deletePreviousQuestions,
   };
 
   return (

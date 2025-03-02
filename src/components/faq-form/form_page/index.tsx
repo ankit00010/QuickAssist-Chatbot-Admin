@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./style.css";
 import CustomButton from "@/components/buttons";
 import { useRouter } from "next/navigation";
+import { FAQsDataType } from "@/types/faqs_data_type";
 interface FormPageProps {
   id?: string;
   buttonText: string;
@@ -18,8 +19,26 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
   const router = useRouter();
   // const [loading, setLoading] = useState(false);
   const [resetTrigger, setResetTrigger] = useState(false);
-  const handleInputChange = (field: string, value: string | number) => {
-    setFaqs({ ...faqs, [field]: value });
+  // const handleInputChange = (field: string, value: string | number) => {
+  //   setFaqs({ ...faqs, [field]: value });
+  // };
+
+  const handleInputChange = (field: keyof FAQsDataType[0], value: string) => {
+    setFaqs((prevFaqs) => {
+      // Ensure `prevFaqs` is always an array
+      const updatedFaqs =
+        Array.isArray(prevFaqs) && prevFaqs.length > 0
+          ? [...prevFaqs]
+          : [{ question: "", answer: "", context: "", keywords: "" }];
+
+      // Modify the first object safely
+      updatedFaqs[0] = {
+        ...updatedFaqs[0],
+        [field]: value,
+      };
+
+      return updatedFaqs;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,17 +56,19 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
     // setLoading(false);
 
     // Reset the form fields and trigger any required state updates
-    setFaqs({ question: "", answer: "", context: "", keywords: "" });
+    setFaqs([{ question: "", answer: "", context: "", keywords: "" }]);
     setResetTrigger((prev) => !prev);
   };
 
   const resetFaqForm = () => {
-    setFaqs({
-      question: "",
-      answer: "",
-      context: "",
-      keywords: "",
-    });
+    setFaqs([
+      {
+        question: "",
+        answer: "",
+        context: "",
+        keywords: "",
+      },
+    ]);
     setResetTrigger((prev) => !prev);
   };
   const handleReset = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,14 +85,18 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
         return router.push("/faqs");
       }
 
-      setFaqs({
-        ...result,
-        keywords: Array.isArray(result.keywords)
-          ? result.keywords.join(", ")
-          : "",
-      });
+      setFaqs([
+        {
+          question: result.question || "",
+          answer: result.answer || "",
+          context: result.context || "",
+          keywords: Array.isArray(result.keywords)
+            ? result.keywords.join(", ")
+            : result.keywords || "",
+        },
+      ]);
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   return (
     <div className="faq-form-container">
@@ -80,8 +105,8 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
           label="Question"
           type="text"
           placeholder="Enter Your Question"
-          onChange={(value) => handleInputChange("question", value)}
-          value={faqs?.question || ""}
+          value={faqs[0]?.question || ""}
+          onChange={(value) => handleInputChange("question", String(value))}
           required
           errorMessage="Question is required"
           resetTrigger={resetTrigger}
@@ -90,8 +115,8 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
           label="Answer"
           type="textarea"
           placeholder="Enter the answer"
-          value={faqs?.answer || ""}
-          onChange={(value) => handleInputChange("answer", value)}
+          value={faqs[0]?.answer || ""}
+          onChange={(value) => handleInputChange("answer", String(value))}
           required
           errorMessage="Answer is required"
           resetTrigger={resetTrigger}
@@ -101,8 +126,8 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
           label="Keywords"
           type="textarea"
           placeholder="Enter related keywords (comma-separated)"
-          value={faqs?.keywords || ""}
-          onChange={(value) => handleInputChange("keywords", value)}
+          value={faqs[0]?.keywords || ""}
+          onChange={(value) => handleInputChange("keywords", String(value))}
           required
           errorMessage="Keywords is required"
           resetTrigger={resetTrigger}
@@ -112,8 +137,8 @@ const FaqFormPage: React.FC<FormPageProps> = ({ id, buttonText, values }) => {
           label="Context"
           type="text"
           placeholder="Context of the FAQ"
-          value={faqs?.context || ""}
-          onChange={(value) => handleInputChange("context", value)}
+          value={faqs[0]?.context || ""}
+          onChange={(value) => handleInputChange("context", String(value))}
           required
           errorMessage="Context is required"
           resetTrigger={resetTrigger}
