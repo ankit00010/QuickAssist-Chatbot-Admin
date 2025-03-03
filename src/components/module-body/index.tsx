@@ -20,6 +20,9 @@ const ModuleBody = () => {
   const handleFileUpload = (file: File | null) => {
     setUploadedFile(file);
     console.log("File uploaded:", file);
+
+    
+
   };
   const handleSubmitBtn = async (limit: number, id: string) => {
     const result = await getQuestionsData(limit, id);

@@ -18,6 +18,7 @@ import { paginationType } from "@/types/pagination_types";
 import { FAQsDataType } from "@/types/faqs_data_type";
 import { AdminMessageResponse } from "@/types/admin_message_response";
 import { TrainingDetails } from "@/types/training_Data_details";
+
 export interface AdminContextType {
   isAdmin: boolean;
   setAdmin: (adminStatus: boolean) => void;
@@ -60,6 +61,8 @@ export interface AdminContextType {
 
   //Delete the preivous assigned Data
   deletePreviousQuestions: () => Promise<boolean>;
+
+  handleMultipleFaqs: (faq: FaqsTypeList) => void;
 }
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -105,16 +108,8 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, []);
 
-  //Usesate for the questions that are not answered and needed to be train
 
-  const [train_questions, setTrainQuestions] = useState([]);
 
-  // useEffect(() => {
-  //   console.log("Value of category is ", pagination.category);
-  //   console.log("Value of page is ", pagination.page);
-  //   console.log("Value of totalPages is ", pagination.totalPages);
-  //   console.log("Value of Un Answered Questions is ", totalUnAnsweredQuestions);
-  // }, [pagination]);
 
   //Add FAQ Api
 
@@ -129,7 +124,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const transformedFAQs = faqs.map((faq) => ({
       question: faq.question,
       answer: faq.answer,
-      keywords: faq.keywords.split(",").map((kw) => kw.trim()), // ✅ Convert string to array
+      keywords: faq.keywords.split(",").map((kw) => kw.trim()),
       context: faq.context,
     }));
     console.log("TransformKeywords are", transformedFAQs);
@@ -155,7 +150,34 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       alert(responseData.message);
     }
   };
+  const handleMultipleFaqs = async (transformedFAQs: FaqsTypeList) => {
+    if (!token) {
+      return router.push("/");
+    }
 
+    console.log("TransformKeywords are", transformedFAQs);
+
+    const response = await fetchService({
+      method: "POST",
+      endpoint: `api/admin/add-data`,
+      data: {
+        transformedFAQs,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Token Value is ", token);
+
+    const responseData = await response.data;
+    console.log("Response Data is ", responseData);
+
+    if (response.code === 200) {
+      alert(responseData.message);
+    } else {
+      alert(responseData.message);
+    }
+  };
   //Edit API
 
   const editAPI = async (id: string) => {
@@ -291,6 +313,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     } catch (error) {
       console.error("Error fetching FAQ data:", error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, pagination.category]);
 
   // Call the function when component mounts or when pagination changes
@@ -376,7 +399,6 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     if (responseData.code === 200) {
       console.log("The Data received is ", responseData);
-      setTrainQuestions(responseData.data.questions_list);
       setDetails((prev) => ({
         ...prev,
         assigned_questions: responseData.data.count,
@@ -453,6 +475,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setDetails,
     //Delete the previous assigned Data
     deletePreviousQuestions,
+    handleMultipleFaqs,
   };
 
   return (
