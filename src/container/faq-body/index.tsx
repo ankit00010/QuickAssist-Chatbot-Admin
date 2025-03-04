@@ -4,13 +4,12 @@ import "./style.css";
 import { BiEdit } from "react-icons/bi";
 import { TbTrash } from "react-icons/tb";
 import PopUp from "@/components/pop-up";
-import FAQPagination from "@/components/pagination";
+import Pagination from "@/components/pagination";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 import { useRouter } from "next/navigation";
 const FAQBody = () => {
-  const { faqData, setFaqData, deleteApi } = useContext(
-    AdminContext
-  ) as AdminContextType;
+  const { faqData, setFaqData, deleteApi, setPagination, pagination } =
+    useContext(AdminContext) as AdminContextType;
   const [popUp, setPopUp] = useState<boolean>(false);
   const [deleteID, setDeleteID] = useState<string | null>(null);
   // const [faqData, setFaqData] = useState([
@@ -45,7 +44,7 @@ const FAQBody = () => {
   //       "Businesses can improve customer retention by providing excellent service, personalized offers, loyalty programs, and engaging communication.",
   //   },
   // ]);
-  const router=useRouter();
+  const router = useRouter();
   const handleDeleteClick = (_id: string) => {
     setDeleteID(_id);
     setPopUp(true);
@@ -82,13 +81,19 @@ const FAQBody = () => {
                 <td>{faq.answer}</td>
                 <td className="faq-actions">
                   <button className="action-btn edit">
-                    <BiEdit onClick={()=>{router.push(`/edit/${faq.faq_id}`)}} />
+                    <BiEdit
+                      onClick={() => {
+                        router.push(`/edit/${faq.faq_id}`);
+                      }}
+                    />
                   </button>
                   <button
                     className="action-btn delete"
                     onClick={() => {
-                      handleDeleteClick(faq.faq_id);
-                      setPopUp(true);
+                      if (faq.faq_id) {
+                        handleDeleteClick(faq.faq_id);
+                        setPopUp(true);
+                      }
                     }}
                   >
                     <TbTrash />
@@ -116,7 +121,7 @@ const FAQBody = () => {
         </div>
       )}
       <div className="pagination">
-        <FAQPagination />
+        <Pagination setPagination={setPagination} pagination={pagination} />
       </div>
     </div>
   );

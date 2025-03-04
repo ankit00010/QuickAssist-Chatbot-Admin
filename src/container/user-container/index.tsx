@@ -1,5 +1,6 @@
 import Title from "@/components/header/title";
-import DataTable from "@/components/user-body";
+import Pagination from "@/components/pagination";
+import UserTable from "@/components/user-body";
 // import UserBody from "@/components/user-body";
 import React from "react";
 import { HiMiniUsers } from "react-icons/hi2";
@@ -13,7 +14,8 @@ const UserContainer = () => {
         icon={<HiMiniUsers size={30} />}
       />
 
-      <DataTable/>
+      <UserTable/>
+      {/* <Pagination/> */}
     </div>
   );
 };

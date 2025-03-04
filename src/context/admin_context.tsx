@@ -10,8 +10,6 @@ import React, {
   useState,
 } from "react";
 
-export const AdminContext = createContext<AdminContextType | null>(null);
-
 import { useRouter } from "next/navigation";
 import { FaqsTypeList } from "@/types/faq_type";
 import { paginationType } from "@/types/pagination_types";
@@ -61,9 +59,11 @@ export interface AdminContextType {
 
   //Delete the preivous assigned Data
   deletePreviousQuestions: () => Promise<boolean>;
-
+ 
   handleMultipleFaqs: (faq: FaqsTypeList) => void;
 }
+
+export const AdminContext = createContext<AdminContextType | null>(null);
 
 const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
@@ -107,9 +107,6 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setToken(JSON.parse(storedToken));
     }
   }, []);
-
-
-
 
   //Add FAQ Api
 

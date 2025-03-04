@@ -7,12 +7,17 @@ import {
 
 import "./style.css";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
-const FAQPagination = () => {
-  //Context
+import { paginationType } from "@/types/pagination_types";
 
-  const { setPagination, pagination } = useContext(
-    AdminContext
-  ) as AdminContextType;
+interface PaginationProps {
+  setPagination: React.Dispatch<React.SetStateAction<paginationType>>;
+  pagination: paginationType;
+}
+const Pagination: React.FC<PaginationProps> = ({
+  setPagination,
+  pagination,
+}) => {
+  //Context
 
   const [currentPage, setCurrentPage] = useState(1);
   const handleLeftArrow = () => {
@@ -32,14 +37,16 @@ const FAQPagination = () => {
       ...prev,
       page: currentPage,
     }));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
   return (
     <div className="pagination-container">
       <button
         onClick={handleLeftArrow}
         disabled={pagination.page === 1}
-        className={`pagination-button ${pagination.page  === 1 ? "disabled " : ""}`}
+        className={`pagination-button ${
+          pagination.page === 1 ? "disabled " : ""
+        }`}
       >
         <MdOutlineKeyboardArrowLeft size={20} />
       </button>
@@ -60,4 +67,4 @@ const FAQPagination = () => {
   );
 };
 
-export default FAQPagination;
+export default Pagination;
