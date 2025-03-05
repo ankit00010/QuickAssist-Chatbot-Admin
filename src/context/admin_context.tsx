@@ -17,6 +17,7 @@ import { paginationType } from "@/types/pagination_types";
 import { FAQsDataType } from "@/types/faqs_data_type";
 import { AdminMessageResponse } from "@/types/admin_message_response";
 import { TrainingDetails } from "@/types/training_Data_details";
+import { UserTypes } from "@/types/user_types";
 
 export interface AdminContextType {
   isAdmin: boolean;
@@ -462,34 +463,46 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
   const user_lists_api = useCallback(async () => {
-    const storedToken: any = localStorage.getItem("token");
-    console.log("The token we get is ", JSON.parse(storedToken));
-    if (storedToken) {
-      setToken(JSON.parse(storedToken));
+    const storedToken = localStorage.getItem("token");
+
+    if (!storedToken) {
+      console.warn("No token found in localStorage.");
+      return;
     }
-    const token = JSON.parse(storedToken);
 
-    const response = await fetchService({
-      method: "GET",
-      endpoint: `api/admin/users/list?page=${user_data_pagination.page}&limit=5`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let token: string | null = null;
+    try {
+      token = JSON.parse(storedToken) as string;
+      console.log("The token we get is ", token);
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      return;
+    }
 
-    const responseData = await response.data;
+    try {
+      const response = await fetchService({
+        method: "GET",
+        endpoint: `api/admin/users/list?page=${user_data_pagination.page}&limit=5`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (responseData.code === 200) {
-      setUserData(responseData.data);
-      setUserDataPagination((prev) => ({
-        ...prev,
+      const responseData = await response.data;
 
-        totalPages: Math.max(1, Math.ceil(responseData.totalItems / 5)),
-        totalItems: responseData.totalItems,
-      }));
-      console.log("Users Result is => ", responseData);
-    } else {
-      console.log("Error Message => ", responseData.message);
+      if (responseData.code === 200) {
+        setUserData(responseData.data);
+        setUserDataPagination((prev: paginationType) => ({
+          ...prev,
+          totalPages: Math.max(1, Math.ceil(responseData.totalItems / 5)),
+          totalItems: responseData.totalItems,
+        }));
+        console.log("Users Result is => ", responseData);
+      } else {
+        console.error("Error Message => ", responseData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching user list:", error);
     }
   }, [user_data_pagination.page]);
 

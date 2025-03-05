@@ -45,7 +45,6 @@ const FAQBody = () => {
   //   },
   // ]);
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
 
   const handleDeleteClick = (_id: string) => {
     setDeleteID(_id);

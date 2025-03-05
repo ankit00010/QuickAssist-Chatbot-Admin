@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import "./style.css";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 const UserTable = () => {
