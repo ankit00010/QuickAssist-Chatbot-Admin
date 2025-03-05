@@ -1,6 +1,6 @@
 export type paginationType={
     page: number;
     totalPages: number;
-    category: string;
+    category?: string;
     totalItems: number;
   }

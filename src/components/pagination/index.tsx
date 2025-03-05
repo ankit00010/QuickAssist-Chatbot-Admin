@@ -1,64 +1,72 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 
 import "./style.css";
-import { AdminContext, AdminContextType } from "@/context/admin_context";
 import { paginationType } from "@/types/pagination_types";
 
 interface PaginationProps {
   setPagination: React.Dispatch<React.SetStateAction<paginationType>>;
   pagination: paginationType;
 }
+
 const Pagination: React.FC<PaginationProps> = ({
   setPagination,
   pagination,
 }) => {
-  //Context
+  const [currentPage, setCurrentPage] = useState(pagination.page);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // Sync currentPage with pagination.page
+  useEffect(() => {
+    setCurrentPage(pagination.page);
+  }, [pagination.page]);
+
+  // Handle left arrow click
   const handleLeftArrow = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
   };
 
+  // Handle right arrow click
   const handleRightArrow = () => {
     if (currentPage < pagination.totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
   };
 
+  // Update parent pagination state when currentPage changes
   useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      page: currentPage,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+    if (currentPage !== pagination.page) {
+      setPagination((prev) => ({
+        ...prev,
+        page: currentPage,
+      }));
+    }
+  }, [currentPage, setPagination, pagination.page]);
+
   return (
     <div className="pagination-container">
       <button
         onClick={handleLeftArrow}
-        disabled={pagination.page === 1}
-        className={`pagination-button ${
-          pagination.page === 1 ? "disabled " : ""
-        }`}
+        disabled={currentPage === 1}
+        className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
       >
         <MdOutlineKeyboardArrowLeft size={20} />
       </button>
 
       <button className="page-number">
-        {pagination.page} / {pagination.totalPages}
+        {currentPage} / {pagination.totalPages || 1}
       </button>
+
       <button
         onClick={handleRightArrow}
-        disabled={pagination.page === pagination.totalPages}
+        disabled={currentPage === pagination.totalPages}
         className={`pagination-button ${
-          pagination.page === pagination.totalPages ? "disabled" : ""
+          currentPage === pagination.totalPages ? "disabled" : ""
         }`}
       >
         <MdOutlineKeyboardArrowRight size={20} />

@@ -45,6 +45,8 @@ const FAQBody = () => {
   //   },
   // ]);
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleDeleteClick = (_id: string) => {
     setDeleteID(_id);
     setPopUp(true);
@@ -121,7 +123,12 @@ const FAQBody = () => {
         </div>
       )}
       <div className="pagination">
-        <Pagination setPagination={setPagination} pagination={pagination} />
+        <Pagination
+          setPagination={setPagination}
+          pagination={pagination}
+          // currentPage={currentPage}
+          // setCurrentPage={setCurrentPage}
+        />
       </div>
     </div>
   );

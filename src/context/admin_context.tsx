@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   createContext,
   ReactNode,
+  SetStateAction,
   useCallback,
   useEffect,
   useState,
@@ -59,8 +60,15 @@ export interface AdminContextType {
 
   //Delete the preivous assigned Data
   deletePreviousQuestions: () => Promise<boolean>;
- 
+
   handleMultipleFaqs: (faq: FaqsTypeList) => void;
+
+  // Get User list Api Type
+
+  user_lists_api: () => void;
+  userData: UserTypes;
+  setUserDataPagination: React.Dispatch<SetStateAction<paginationType>>;
+  user_data_pagination: paginationType;
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -90,6 +98,22 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     category: "",
     totalItems: 1,
   });
+
+  const [user_data_pagination, setUserDataPagination] =
+    useState<paginationType>({
+      page: 1,
+      totalPages: 1,
+      totalItems: 1,
+    });
+
+  const [userData, setUserData] = useState<UserTypes>([
+    {
+      _id: "",
+      user_id: "",
+      phone_number: "",
+      name: "",
+    },
+  ]);
 
   const [details, setDetails] = useState<TrainingDetails>({
     total_questions: 0,
@@ -314,9 +338,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [pagination.page, pagination.category]);
 
   // Call the function when component mounts or when pagination changes
-  useEffect(() => {
-    getFaqData();
-  }, [getFaqData]);
+  // useEffect(() => {
+  //   getFaqData();
+  // }, [getFaqData]);
   //Delete Api
 
   const deleteApi = async (id: string): Promise<boolean> => {
@@ -407,6 +431,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return false;
     }
   };
+  ////////////////////////////////////////////////////////////////////////////////////////////////
 
   const deletePreviousQuestions = async (): Promise<boolean> => {
     if (!token) {
@@ -433,6 +458,40 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return false;
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const user_lists_api = useCallback(async () => {
+    const storedToken: any = localStorage.getItem("token");
+    console.log("The token we get is ", JSON.parse(storedToken));
+    if (storedToken) {
+      setToken(JSON.parse(storedToken));
+    }
+    const token = JSON.parse(storedToken);
+
+    const response = await fetchService({
+      method: "GET",
+      endpoint: `api/admin/users/list?page=${user_data_pagination.page}&limit=5`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const responseData = await response.data;
+
+    if (responseData.code === 200) {
+      setUserData(responseData.data);
+      setUserDataPagination((prev) => ({
+        ...prev,
+
+        totalPages: Math.max(1, Math.ceil(responseData.totalItems / 5)),
+        totalItems: responseData.totalItems,
+      }));
+      console.log("Users Result is => ", responseData);
+    } else {
+      console.log("Error Message => ", responseData.message);
+    }
+  }, [user_data_pagination.page]);
 
   const admin_context_value = {
     isAdmin,
@@ -473,6 +532,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     //Delete the previous assigned Data
     deletePreviousQuestions,
     handleMultipleFaqs,
+
+    //Get Users List Api
+    user_lists_api,
+    userData,
+    setUserDataPagination,
+    user_data_pagination,
   };
 
   return (
