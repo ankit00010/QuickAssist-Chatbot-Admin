@@ -70,6 +70,7 @@ export interface AdminContextType {
   userData: UserTypes;
   setUserDataPagination: React.Dispatch<SetStateAction<paginationType>>;
   user_data_pagination: paginationType;
+  loading:boolean
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -81,6 +82,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
 
   //LOADING USESTATE
+  const [loading, setLoading] = useState(false);
 
   //FAQs Data based useState
 
@@ -463,6 +465,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
   const user_lists_api = useCallback(async () => {
+    setLoading(true);
     const storedToken = localStorage.getItem("token");
 
     if (!storedToken) {
@@ -498,10 +501,19 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           totalItems: responseData.totalItems,
         }));
         console.log("Users Result is => ", responseData);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       } else {
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+
         console.error("Error Message => ", responseData.message);
       }
     } catch (error) {
+      setLoading(false);
+
       console.error("Error fetching user list:", error);
     }
   }, [user_data_pagination.page]);
@@ -551,6 +563,8 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     userData,
     setUserDataPagination,
     user_data_pagination,
+
+    loading
   };
 
   return (

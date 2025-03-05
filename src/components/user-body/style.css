@@ -4,7 +4,19 @@
   margin: 30px auto;
   padding: 0 20px;
   overflow-x: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
+
+.user-table-container p{
+ margin-top: 10%;
+ overflow: hidden;
+}
+
+
 
 .user-table {
   width: 100%;
