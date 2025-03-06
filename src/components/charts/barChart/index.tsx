@@ -68,7 +68,7 @@ const BarChartData: React.FC<BarChartDataProps> = ({
 
     setChartData(data);
     setChartOptions(options);
-  }, [label, viewData]);
+  }, [label, viewData,title]);
 
   return (
     <div>

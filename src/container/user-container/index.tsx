@@ -11,6 +11,7 @@ const UserContainer = () => {
     useContext(AdminContext) as AdminContextType;
   useEffect(() => {
     user_lists_api();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_data_pagination.page]);
   return (
     <div className="user-container">

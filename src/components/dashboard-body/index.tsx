@@ -36,6 +36,7 @@ const DashboardBody = () => {
 
   useEffect(() => {
     getDashBoardDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -49,9 +50,16 @@ const DashboardBody = () => {
               <span className="dashboard-metric-title">{metric.title}</span>
             </div>
             <p className="dashboard-metric-count">
-              <CountUp start={0} end={metric.count} duration={1.5} separator="," />
+              <CountUp
+                start={0}
+                end={metric.count}
+                duration={1.5}
+                separator=","
+              />
             </p>
-            <span className="dashboard-metric-footer">{metric.description}</span>
+            <span className="dashboard-metric-footer">
+              {metric.description}
+            </span>
           </div>
         ))}
       </div>
