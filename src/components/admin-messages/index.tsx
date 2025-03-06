@@ -106,7 +106,7 @@ const AdminMessageBody = () => {
         <CustomInputField
           value={message}
           onChange={(value) => handleChange("message", value)}
-          placeholder="Enter Message Here (Use \\n for new line, **text** for bold)"
+          placeholder="Enter Message Here (Use  **text** for bold)"
           type="textarea"
           errorMessage="Please enter message here"
           required={true}

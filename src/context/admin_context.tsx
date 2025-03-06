@@ -18,6 +18,7 @@ import { FAQsDataType } from "@/types/faqs_data_type";
 import { AdminMessageResponse } from "@/types/admin_message_response";
 import { TrainingDetails } from "@/types/training_Data_details";
 import { UserTypes } from "@/types/user_types";
+import { DashBoardTypes } from "@/types/DashBoardTypes";
 
 export interface AdminContextType {
   isAdmin: boolean;
@@ -70,7 +71,11 @@ export interface AdminContextType {
   userData: UserTypes;
   setUserDataPagination: React.Dispatch<SetStateAction<paginationType>>;
   user_data_pagination: paginationType;
-  loading:boolean
+  loading: boolean;
+
+
+  dashboard:DashBoardTypes;
+  getDashBoardDetails:()=>void;
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -102,6 +107,8 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     totalItems: 1,
   });
 
+  //Pagination usestate for rendering users lists
+
   const [user_data_pagination, setUserDataPagination] =
     useState<paginationType>({
       page: 1,
@@ -109,6 +116,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       totalItems: 1,
     });
 
+  //Users Data stored here in this usestate
   const [userData, setUserData] = useState<UserTypes>([
     {
       _id: "",
@@ -118,11 +126,21 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     },
   ]);
 
+  //Details
   const [details, setDetails] = useState<TrainingDetails>({
     total_questions: 0,
     user_Id: "",
     limit: 0,
     assigned_questions: 0,
+  });
+
+  //DASHBOARD DETAILS
+
+  const [dashboard, setDashBoard] = useState<DashBoardTypes>({
+    totalFAQs: 0,
+    toatlUsers: 0,
+    totalUnAnsweredQuestions: 0,
+    finalResult: [{ label: "", count: 0 }],
   });
 
   //FAQS DATA LIST
@@ -516,8 +534,56 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       console.error("Error fetching user list:", error);
     }
-  }, [user_data_pagination.page]);
+  }, []);
 
+  /******************************************************************************************
+   *                                 DASHBOARD GET REQUEST
+   * ---------------------------------------------------------------------------------------
+   * Description: This section handles the retrieval of dashboard data.
+   * ---------------------------------------------------------------------------------------
+   ******************************************************************************************/
+
+  const getDashBoardDetails = async () => {
+    const storedToken = localStorage.getItem("token");
+
+    if (!storedToken) {
+      console.warn("No token found in localStorage.");
+      return;
+    }
+
+    let verifyToken: string | null = null;
+    try {
+      verifyToken = JSON.parse(storedToken) as string;
+      console.log("The token we get is ", token);
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      return;
+    }
+
+    try {
+      const response = await fetchService({
+        method: "GET",
+        endpoint: "api/admin/dashboard",
+        headers: {
+          Authorization: `Bearer ${verifyToken}`,
+        },
+      });
+
+      const responseData = await response.data;
+
+      if (responseData.code === 200) {
+        console.log("Response of Dashboard Data => ", responseData);
+
+        setDashBoard(responseData.result);
+      } else {
+        console.log("Erorr Message => ", responseData.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+ 
   const admin_context_value = {
     isAdmin,
     setAdmin,
@@ -564,7 +630,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setUserDataPagination,
     user_data_pagination,
 
-    loading
+    loading,
+
+
+//Dashboard Related Detailss
+    dashboard,
+    getDashBoardDetails
   };
 
   return (

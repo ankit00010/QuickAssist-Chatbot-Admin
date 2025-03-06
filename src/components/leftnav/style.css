@@ -6,7 +6,7 @@
 /* Default Sidebar */
 .sidebar {
   width: 17rem;
-  height: 100vh;
+  height: 120vh;
   background-color: #fff;
   padding: 1rem;
   transition: all 0.3s ease-in-out;
