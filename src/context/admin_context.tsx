@@ -73,9 +73,8 @@ export interface AdminContextType {
   user_data_pagination: paginationType;
   loading: boolean;
 
-
-  dashboard:DashBoardTypes;
-  getDashBoardDetails:()=>void;
+  dashboard: DashBoardTypes;
+  getDashBoardDetails: () => void;
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -320,6 +319,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const token = JSON.parse(storedToken);
     setToken(token);
+    setLoading(true);
 
     try {
       const response = await fetchService({
@@ -331,12 +331,19 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
 
       if (response.code !== 200) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+
         if (response.code === 403) router.push("/");
         console.error(response.data?.message || "Failed to fetch FAQ data");
         return;
       }
       const responseData = await response.data;
       console.log("Response Data is ", responseData);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
 
       setFaqData(responseData.data);
       setPagination((prev) => ({
@@ -353,6 +360,10 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         total_questions: responseData.unAnsQuestionsCount,
       }));
     } catch (error) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+
       console.error("Error fetching FAQ data:", error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -535,7 +546,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error fetching user list:", error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user_data_pagination.page,user_data_pagination.totalPages]);
+  }, [user_data_pagination.page, user_data_pagination.totalPages]);
 
   /******************************************************************************************
    *                                 DASHBOARD GET REQUEST
@@ -584,7 +595,6 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
- 
   const admin_context_value = {
     isAdmin,
     setAdmin,
@@ -633,10 +643,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     loading,
 
-
-//Dashboard Related Detailss
+    //Dashboard Related Detailss
     dashboard,
-    getDashBoardDetails
+    getDashBoardDetails,
   };
 
   return (

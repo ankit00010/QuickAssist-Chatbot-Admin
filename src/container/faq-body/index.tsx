@@ -7,8 +7,9 @@ import PopUp from "@/components/pop-up";
 import Pagination from "@/components/pagination";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 import { useRouter } from "next/navigation";
+import {  BounceLoader } from "react-spinners";
 const FAQBody = () => {
-  const { faqData, setFaqData, deleteApi, setPagination, pagination } =
+  const { faqData, setFaqData, deleteApi, setPagination, pagination, loading } =
     useContext(AdminContext) as AdminContextType;
   const [popUp, setPopUp] = useState<boolean>(false);
   const [deleteID, setDeleteID] = useState<string | null>(null);
@@ -66,7 +67,7 @@ const FAQBody = () => {
   };
   return (
     <div className="faq-body-container">
-      {faqData.length > 0 ? (
+      {faqData.length > 0 && !loading ? (
         <table className="faq-table">
           <thead>
             <tr>
@@ -104,6 +105,12 @@ const FAQBody = () => {
             ))}
           </tbody>
         </table>
+      ) : loading ? (
+        <div className="loader-container">
+          <p>
+            <BounceLoader loading={loading} size={50} color="#258d8f" />
+          </p>
+        </div>
       ) : (
         <div className="faq-default-message">
           <p className="faq-default-message-text">
