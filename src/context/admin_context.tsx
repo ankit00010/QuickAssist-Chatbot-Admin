@@ -535,7 +535,7 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error fetching user list:", error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user_data_pagination.page,user_data_pagination.totalPages]);
 
   /******************************************************************************************
    *                                 DASHBOARD GET REQUEST
