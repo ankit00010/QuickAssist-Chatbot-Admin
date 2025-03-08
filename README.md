@@ -20,8 +20,8 @@ The Admin Panel is a comprehensive platform built to manage and optimize the fun
 - **Broadcast Messaging**:  
   - Send announcements or updates to all users efficiently.  
 
-- **Secure Login**:  
-  - Added authentication to ensure only authorized admins can access the platform.  
+- **2FA Authentication**:  
+  - Added authentication to ensure only authorized admin can access the platform.  
 
 ## Problem Solved
 
@@ -32,8 +32,36 @@ The Admin Panel streamlines the management of chatbot operations by providing an
 - **Frontend**: 
   - Next.js  
   - TypeScript  
-  - CSS  
+  - CSS
+  - 
+- **Screenshots**:
+- ![image](https://github.com/user-attachments/assets/b7d235c1-b8f0-443d-a32a-b1ab2df57c11)
 
-##Future Enhancements
+- ## ADMIN PANEL
+
+## DASHBOARD
+![image](https://github.com/user-attachments/assets/4ae71053-5194-4136-93e1-72d5a4faff42)
+
+## FAQs
+![image](https://github.com/user-attachments/assets/6195fd07-6f4c-4c60-84f6-561e124a0026)
+
+## Add FAQs
+![image](https://github.com/user-attachments/assets/af0ceafa-b8ef-40db-bc1f-fe57f7cacdae)
+
+## Admin Message
+![image](https://github.com/user-attachments/assets/ddc66a62-a983-4396-86a5-45a7a38ada94)
+
+![image](https://github.com/user-attachments/assets/d14b2079-76cb-49c5-a0dc-3b4a83ca50b1)
+
+
+## Module Training
+![image](https://github.com/user-attachments/assets/71f98094-5ed3-44b1-91a2-cc309f02881d)
+
+
+## USERS
+![image](https://github.com/user-attachments/assets/2bc318f8-4155-4387-8ab4-68fd3b39be03)
+
+
+## Future Enhancements
   -Advanced Analytics Dashboard: Provide more detailed insights into user behavior and chatbot performance.
   -Multi-Language Support: Enable FAQs and responses in multiple languages.
