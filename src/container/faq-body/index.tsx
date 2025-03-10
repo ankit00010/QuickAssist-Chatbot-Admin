@@ -7,7 +7,7 @@ import PopUp from "@/components/pop-up";
 import Pagination from "@/components/pagination";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
 import { useRouter } from "next/navigation";
-import {  BounceLoader } from "react-spinners";
+import { BounceLoader } from "react-spinners";
 const FAQBody = () => {
   const { faqData, setFaqData, deleteApi, setPagination, pagination, loading } =
     useContext(AdminContext) as AdminContextType;
@@ -77,8 +77,8 @@ const FAQBody = () => {
             </tr>
           </thead>
           <tbody>
-            {faqData.map((faq) => (
-              <tr key={faq.faq_id}>
+            {faqData.map((faq, index) => (
+              <tr key={index}>
                 <td>{faq.question}</td>
                 <td>{faq.answer}</td>
                 <td className="faq-actions">

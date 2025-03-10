@@ -13,6 +13,8 @@ const UserContainer = () => {
     user_lists_api();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_data_pagination.page]);
+  const hasPaginationData =
+    user_data_pagination.totalItems > 0 && user_data_pagination.totalPages > 0;
   return (
     <div className="user-container">
       <Title
@@ -23,10 +25,12 @@ const UserContainer = () => {
 
       <UserTable />
       <div className="user-table-pagination">
-        <Pagination
-          pagination={user_data_pagination}
-          setPagination={setUserDataPagination}
-        />
+        {hasPaginationData && ( 
+          <Pagination
+            pagination={user_data_pagination}
+            setPagination={setUserDataPagination}
+          />
+        )}
       </div>
     </div>
   );

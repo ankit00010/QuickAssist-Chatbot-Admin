@@ -19,6 +19,7 @@ import { AdminMessageResponse } from "@/types/admin_message_response";
 import { TrainingDetails } from "@/types/training_Data_details";
 import { UserTypes } from "@/types/user_types";
 import { DashBoardTypes } from "@/types/DashBoardTypes";
+import { TrainingDataTypes } from "@/types/TrainingDataTypes";
 
 export interface AdminContextType {
   isAdmin: boolean;
@@ -75,6 +76,9 @@ export interface AdminContextType {
 
   dashboard: DashBoardTypes;
   getDashBoardDetails: () => void;
+
+  //Transfering training Data need to be train for download
+  trainingData: TrainingDataTypes;
 }
 
 export const AdminContext = createContext<AdminContextType | null>(null);
@@ -111,8 +115,8 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user_data_pagination, setUserDataPagination] =
     useState<paginationType>({
       page: 1,
-      totalPages: 1,
-      totalItems: 1,
+      totalPages: 0,
+      totalItems: 0,
     });
 
   //Users Data stored here in this usestate
@@ -141,6 +145,10 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     totalUnAnsweredQuestions: 0,
     finalResult: [{ label: "", count: 0 }],
   });
+
+  //Questions List to Train (Model Training)
+
+  const [trainingData, setTrainingData] = useState<TrainingDataTypes>([]);
 
   //FAQS DATA LIST
   const [faqData, setFaqData] = useState<FaqsTypeList>([]);
@@ -451,7 +459,19 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const responseData = await response.data;
 
     if (responseData.code === 200) {
-      console.log("The Data received is ", responseData);
+      const formatedData = responseData.data.questions_list.map(
+        (data: {
+          question_id: string;
+          lockedBy: string;
+          question: string;
+        }) => ({
+          question_id: data.question_id,
+          lockedBy: data.lockedBy,
+          question: data.question,
+        })
+      );
+      setTrainingData(formatedData);
+      console.log("The Data received is ", formatedData);
       setDetails((prev) => ({
         ...prev,
         assigned_questions: responseData.data.count,
@@ -465,6 +485,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
+  useEffect(() => {
+    console.log("Value of Trained Data is => ", trainingData);
+  }, [trainingData]);
   const deletePreviousQuestions = async (): Promise<boolean> => {
     if (!token) {
       router.push("/");
@@ -538,12 +561,12 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           setLoading(false);
         }, 500);
 
-        console.error("Error Message => ", responseData.message);
+        console.log("Error Message => ", responseData.message);
       }
     } catch (error) {
       setLoading(false);
 
-      console.error("Error fetching user list:", error);
+      console.log("Error fetching user list:", error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_data_pagination.page, user_data_pagination.totalPages]);
@@ -646,6 +669,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     //Dashboard Related Detailss
     dashboard,
     getDashBoardDetails,
+
+    //TrainingDATA
+    trainingData,
   };
 
   return (

@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import "./style.css";
 import { AdminContext, AdminContextType } from "@/context/admin_context";
-import { MoonLoader } from "react-spinners";
+import { BounceLoader } from "react-spinners";
 const UserTable = () => {
   const { userData, user_data_pagination, loading } = useContext(
     AdminContext
@@ -52,27 +52,40 @@ const UserTable = () => {
   return (
     <div className="user-table-container">
       {loading ? (
-        <p>
-          <MoonLoader loading={loading} size={50} />
-        </p>
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <BounceLoader loading={loading} size={50} />
+        </div>
       ) : (
         <table className="user-table">
           <thead>
             <tr>
-              {headers.map((data, index) => (
-                <th key={index}>{data}</th>
+              {headers.map((header, index) => (
+                <th key={index}>{header}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {userData.map((data, index) => (
-              <tr key={index}>
-                <td>{startID + index}</td>
-                <td>{data.name}</td>
-                <td>{data.phone_number}</td>
-                <td>{data.user_id}</td>
+            {user_data_pagination.totalItems > 0 ? (
+              userData.map((user, index) => (
+                <tr key={index}>
+                  <td>{startID + index}</td>
+                  <td>{user.name}</td>
+                  <td>{user.phone_number}</td>
+                  <td>{user.user_id}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={headers.length}
+                  style={{ textAlign: "center", padding: "10px", height:"200px" }}
+                >
+                  No Data Available
+                </td>
+                
               </tr>
-            ))}
+              
+            )}
           </tbody>
         </table>
       )}
