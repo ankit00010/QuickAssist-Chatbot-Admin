@@ -5,7 +5,12 @@
 **Project Name:** WhatsApp Chatbot Admin Panel  
 **Version:** 1.0  
 
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/ZYrZ032HY6E)
+
 The Admin Panel is a comprehensive platform built to manage and optimize the functionality of the WhatsApp chatbot. It allows administrators to handle FAQs, monitor user interactions, and improve chatbot responses by training it with unanswered questions. This tool provides a seamless interface for better chatbot management and user engagement, following clean architecture principles for scalability and maintainability.
+
+https://github.com/user-attachments/assets/11f3e058-a069-43db-a331-48dad179781a
+
 
 ## Features
 
