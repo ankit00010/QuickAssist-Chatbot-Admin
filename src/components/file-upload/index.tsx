@@ -47,12 +47,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
         const headers: string[] = jsonData[0] as string[];
 
         const rowsData: string[][] = jsonData.slice(1) as string[][];
-        const rows = rowsData.map((row: string[]) => {
+        const rows = rowsData
+        .map((row: string[]) => {
           return headers.reduce<Record<string, string>>((acc, key, index) => {
             acc[key] = row[index] ? String(row[index]) : "";
             return acc;
           }, {});
-        });
+        })
+        .filter((row) => Object.values(row).some((value) => value.trim() !== ""));
 
         setExcelData(rows);
 
