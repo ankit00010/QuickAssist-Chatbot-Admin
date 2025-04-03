@@ -222,9 +222,9 @@ const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     console.log("Response Data is ", responseData);
 
     if (response.code === 200) {
-      alert(responseData.message);
+      alert("Data is added");
     } else {
-      alert(responseData.message);
+      alert("Failed to add data");
     }
   };
   //Edit API
